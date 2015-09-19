@@ -1,0 +1,18 @@
+div.left_nav
+	div.left_nav_return マイページに戻る
+	div.left_nav_inner
+		div.left_nav_item サイトについて
+		div.left_nav_item デザイン
+		div.left_nav_item アピールポイント
+
+div.contents
+	ul
+		li(ng-repeat='user in users') {{user.name}}　password: {{user.password}} id: {{user._id}}
+			button(ng-click="deleteUser(user._id)") 削除
+	div {{users}}
+
+
+	form
+		input(ng-model='user.name')
+		input(ng-model='user.age')
+		button(ng-click='createUser()') 登録

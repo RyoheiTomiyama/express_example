@@ -1,0 +1,35 @@
+doctype html
+html(ng-app="myApp")
+  base(href='/')
+  head
+    meta(charset='utf8')
+    base(href='/')
+    title Angular Express Seed App
+    link(rel='stylesheet/less', href='stylesheets/style.less')
+    script(src='bower_components/less/dist/less.js')
+  body
+    div.header.border_bottom
+        div.logo
+            img(src='images/common/logo.png')
+        ul.navbar
+            li.navbar_inner
+                div.navbar_item.navbar_item_normal TOP
+            li.navbar_inner
+                div.navbar_item.navbar_item_normal TOP
+            li.navbar_inner
+                div.navbar_item.navbar_item_normal TOP
+
+    //- a(ui-sref='login') login
+    //- div(ng-controller='MainCtrl' style='overflow-x: hidden')
+    ui-view
+            //- ng-view
+
+    div.footer
+        p &copy; Company 2012
+    script(src='bower_components/angular/angular.js')
+    script(src='bower_components/angular-ui-router/release/angular-ui-router.js')
+    script(src='bower_components/angular-animate/angular-animate.js')
+    script(src='bower_components/angular-resource/angular-resource.js')
+    script(src='bower_components/angular-cookies/angular-cookies.js')
+    script(src='javascripts/app.js')
+    script(src='javascripts/controller.js')
