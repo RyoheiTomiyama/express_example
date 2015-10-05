@@ -5,7 +5,8 @@ div.wrapper_width.wrapper_height
 			div.login_item
 				div
 					label(for='name') Nickname
-				input#name(type='text' name='name' ng-model='data.name' ng-maxlength='20')
+				input#name(type='text' name='name' ng-model='data.name' ng-maxlength='20' ng-blur='checkUser()')
+				span(ng-if="isUser") すでに使われています
 				//- div(ng-show='user.name.$error') エラー
 			div.login_item Password
 				div

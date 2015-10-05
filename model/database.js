@@ -10,10 +10,16 @@ db.on('connected', function(){
 
 var usersSchema = new mongoose.Schema({
   name: String,
-  password: String
+  password: String,
+  profile: {type: String, ref: 'Profile'}
 });
-// 定義
 mongoose.model('User', usersSchema);
+
+var profileSchema = new mongoose.Schema({
+	userId: String,
+	photo: String
+});
+mongoose.model('Profile', profileSchema);
 
 
 // サンプル生成

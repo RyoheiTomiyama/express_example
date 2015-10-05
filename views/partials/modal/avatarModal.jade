@@ -1,0 +1,79 @@
+div.modal-header
+	h1 modal
+div.modal-body
+	//- p contents
+	div.drag_area(ng-show='avatarSrc == undefined' file-drop-zone on-drop-file='addNewFile(file)')
+		p アップロードするファイルをドロップ
+		p または
+		div.btn_group
+			input(type='file' id='avatar' file-model='avatar' multiple='multiple')
+			label.button.button_green(for='avatar') ファイルを選択
+	div(ng-show='avatarSrc')
+		div.cut_area
+			div.cut_wrap
+				div.cut_item
+					img.cut_image(src='{{avatarSrc}}')
+				img.drag_image(src='{{avatarSrc}}')
+
+		div.ratio_slider
+			div.ratio_button
+
+		button.create(ng-click="createAvatar()") OK!
+		canvas#create_image(width='200' height='200')
+div.modal-footer
+
+script.
+	$(function(){
+		//- var orgW = imgW;
+		var ratio = 1;
+		$('.drag_image').draggable({
+			drag: function(event, ui){
+				var posX = ui.position.left;
+				var posY = ui.position.top;
+				$('.cut_image').css({
+					left: posX,
+					top: posY
+				});
+			}
+		});
+
+		$('.ratio_button').draggable({
+			axis: "x",
+			drag: function(event, ui){
+				orgW = $('.cut_image').width()/ratio;
+				orgH = $('.cut_image').height()/ratio;
+				ratio = 1*ui.position.left/250*2;
+				var valW = orgW*ratio;
+				var valH = orgH*ratio;
+				$('.drag_image, .cut_image').css({
+					'width': valW,
+					'height': valH
+				});
+			}
+		});
+
+		$('body').on('click', '.create', function(){
+			//- $cut_image = $('.cut_image');
+			//- var sX = $cut_image.position().left/ratio*(-1);
+			//- var sY = $cut_image.position().top/ratio*(-1);
+			//- var sW = 200/ratio;
+			//- var sH = 200/ratio;
+			//- var src = $cut_image.attr('src');
+			//- var canvas = document.getElementById("create_image");
+			//- if (!canvas) return false;
+			//- if (!canvas.getContext ) { return false; }
+
+			//- var ctx = canvas.getContext('2d');
+			//- var img = new Image();
+			//- img.src = src;
+			//- /* 画像が読み込まれるのを待ってから処理を続行 */
+			//- img.onload = function() {
+			//- 	ctx.clearRect(0,0,200,200);
+			//- 	ctx.drawImage(img, sX, sY, sW, sH, 0, 0, 200, 200);
+
+			//- 	var createSrc = canvas.toDataURL('image/png');
+			//- 	console.log(createSrc);
+			//- };
+		});
+	});
+

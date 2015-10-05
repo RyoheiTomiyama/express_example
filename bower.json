@@ -20,6 +20,8 @@
     "angular-ui-router": "~0.2.15",
     "less.js": "~2.5.1",
     "less": "~2.5.1",
-    "angular-cookies": "~1.4.6"
+    "angular-cookies": "~1.4.6",
+    "angular-ui-bootstrap-bower": "~0.13.4",
+    "jquery-ui": "~1.11.4"
   }
 }

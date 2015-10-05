@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
 var app = express();
 // mongooseの読み込み
 var mongoose = require('mongoose');
@@ -25,20 +26,35 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ imit: '50mb', extended: false }));
+app.use(bodyParser.json({limit: '50mb'}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// session にユーザー情報保存
+app.use(session({
+  secret: 'secret',
+  resave: false,
+  saveUnitialized: false,
+  cookie: {
+    maxAge: 30*24*60*60*1000
+  }
+}));
+
 app.get('/', routes.index);
 app.get('/partials/:name', routes.partials);
+app.get('/partials/modal/:name', routes.modal);
 // app.get('*', routes .index);
 // app.use('/', routes);
 // app.use('/users', users);
 app.get("/api/users", api.users);
 app.get("/api/users/:name", api.user);
 app.post("/api/users", api.createUser);
+app.get("/api/session", api.isLogined);
+app.get("/api/logout", api.isLogined);
+app.post("/api/changeProfile", api.changeProfile);
 app.get("/api/users/delete/:_id", api.deleteUser);
+
 
 
 // catch 404 and forward to error handler

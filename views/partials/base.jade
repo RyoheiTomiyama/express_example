@@ -1,0 +1,11 @@
+div.left_nav
+	a(ui-sref='base.myPage')
+		div.left_nav_return マイページに戻る
+	div.left_nav_inner
+		a(ui-sref='base.userPage')
+			div.left_nav_item ユーザー情報編集
+		a(ui-sref='base.albumPage')
+			div.left_nav_item アルバム
+		div.left_nav_item アピールポイント
+div.contents(ui-view="")
+	//- button(ng-click='logout()') logout

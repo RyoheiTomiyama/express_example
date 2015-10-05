@@ -1,4 +1,16 @@
-p Hellow {{user.name}}
-{{user}}
+h1 Hello {{user.name}}
+p ユーザー情報
+ul
+	li name: {{user.name}}
+	li id:   {{user._id}}
+	//- li photo: {{user.profile.photo}}
+	li
+		img(ng-src='{{user.profile.photo}}')
+		button.button.button_gray(ng-click='changeAvatar()') Avatar
 
-button(ng-click='logout()') logout
+
+div.logout(ng-show='user.name' ng-click='logout()') Logout
+
+
+
+	//- button(ng-click='logout()') logout
