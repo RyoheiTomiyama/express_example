@@ -1,4 +1,16 @@
 //- button.button.button_green(ng-click='addPhoto()') ＋写真を追加
-div.btn_group
-			input(type='file' id='addPhoto' multifile-model='addPhoto' multiple='multiple')
-			label.button.button_green(for='addPhoto') ＋写真を追加
+
+div(flow-init flow-name="album")
+	div.drag_area(flow-drop flow-drag-enter="style={border:'4px solid green'}" flow-drag-leave="style={}" ng-style="style")
+		p アップロードするファイルをドロップ
+		p または
+		div.btn_group
+			button.button.button_green(for='avatar' flow-btn) ＋写真を追加
+
+	div.album_item(ng-repeat="file in album.files")
+		span {{file.name}}
+		div.album_image
+			img(flow-img="file")
+
+
+	div(ng-click="upload()")

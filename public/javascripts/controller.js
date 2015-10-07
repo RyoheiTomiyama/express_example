@@ -1,6 +1,8 @@
 'use strict';
-var ctrl = angular.module('ctrl', ["ui.router","ngResource","ngCookies"]);
-
+var ctrl = angular.module('ctrl', ["ui.router","ngResource","ngCookies", "flow"]);
+ctrl.config(['flowFactoryProvider', function (flowFactoryProvider) {
+    flowFactoryProvider.factory = fustyFlowFactory;
+}]);
 ctrl.factory("SharedService", ["$rootScope", function($rootScope) {
     var user = {};
 
@@ -52,7 +54,7 @@ ctrl.service("userModel", ["$http", "$q", "$state", "$cookies", "$resource", "Sh
 					self.setUser(user);
 					console.log(user);
 					// $cookies.putObject('user', user);
-					$state.go("userPage");
+					$state.go("base.userPage");
 				}
 			});
 		}
@@ -98,7 +100,7 @@ ctrl.controller("LoginCtrl", function($scope, $http, $q, $state, userModel, Shar
 
 	$scope.checkLogin = function(){
 		if(userModel.isLogined()){
-			$state.go('userPage');
+			$state.go('base.userPage');
 		}
 	};
 	$scope.checkLogin();
@@ -377,4 +379,15 @@ ctrl.controller('AlbumPageCtrl', function($scope, $http, $q, $state, $cookies, u
             });
         }
     };
+});
+ctrl.controller('MyPageCtrl', function($scope, $http, $q, $state, $cookies, userModel, SharedService){
+	// upload later on form submit or something similar
+    $scope.submit = function() {
+
+    };
+    // upload on file select or drop
+    $scope.upload = function (file) {
+
+    };
+
 });

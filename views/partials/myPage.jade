@@ -1,1 +1,28 @@
 p this is mypage
+
+form(name='form')
+	//- p single image with validations
+	//- input.button(type="file" ngf-select ng-model="myfile" name="file" accept="image/*" ngf-max-size="2MB" required ngf-resize="{width:500, height:500}")
+
+
+	div(flow-init flow-name="flowtest")
+		button(flow-btn) select
+
+		div(ng-repeat="file in flowtest.files")
+			img(flow-img="file")
+
+	div image thumbnail
+		img(ngf-thumbnail='myfile')
+
+
+//- <form ng-app="fileUpload" ng-controller="MyCtrl" name="form">
+//-   Single Image with validations
+//-   <div class="button" ngf-select ng-model="file" name="file" ngf-pattern="'image/*'"
+//-     accept="image/*" ngf-max-size="20MB" ngf-min-height="100"
+//-     ngf-resize="{width: 100, height: 100}">Select</div>
+//-   Multiple files
+//-   <div class="button" ngf-select ng-model="files" ngf-multiple="true">Select</div>
+//-   Drop files: <div ngf-drop ng-model="files" class="drop-box">Drop</div>
+//-   <button type="submit" ng-click="submit()">submit</button>
+//- </form>
+//- Image thumbnail: <img ngf-thumbnail="file || '/thumb.jpg'">

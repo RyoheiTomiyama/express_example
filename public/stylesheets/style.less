@@ -134,9 +134,9 @@
 	display: inline-block;
 	vertical-align: top;
 	margin-right: -200px;
+	padding: 20px;
 	padding-right: 200px;
 	width: 100%;
-	padding: 20px;
 	// background-color: @lightgray;
 }
 
@@ -227,4 +227,41 @@
 }
 #create_image{
 	display: none;
+}
+
+
+
+/*-------------------------------------
+	ALBUM
+-------------------------------------*/
+.album_item{
+	display: inline-block;
+	width: 200px;
+	height: 220px;
+	border: 1px solid @lightgray;
+	padding: 10px;
+	margin: 10px;
+	span{
+		display: block;
+		width: 100%;
+		overflow: hidden;
+		font-size: 10px;
+		line-height: 1.5;
+		white-space: nowrap;
+	}
+}
+.album_image{
+	display: inline-block;
+	width: 180px;
+	// height: 200px;
+	border-radius: 3px;
+	border: 1px solid @lightgray;
+	padding: 5px;
+	img{
+		display: block;
+		max-width: 170px;
+		max-height: 170px;
+		margin-left: auto;
+		margin-right: auto;
+	}
 }
