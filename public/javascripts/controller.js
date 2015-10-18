@@ -1,5 +1,5 @@
 'use strict';
-var ctrl = angular.module('ctrl', ["ui.router","ngResource","ngCookies", "flow"]);
+var ctrl = angular.module('ctrl', ["ui.router","ngResource", "flow", "ngFileUpload", "ngStorage"]);
 ctrl.config(['flowFactoryProvider', function (flowFactoryProvider) {
     flowFactoryProvider.factory = fustyFlowFactory;
 }]);
@@ -21,7 +21,7 @@ ctrl.factory("SharedService", ["$rootScope", function($rootScope) {
 }]);
 
 
-ctrl.service("userModel", ["$http", "$q", "$state", "$cookies", "$resource", "SharedService", function($http, $q, $state, $cookies, $resource, SharedService){
+ctrl.service("userModel", ["$http", "$q", "$state", "$resource", "$localStorage", "SharedService", function($http, $q, $state, $resource, $localStorage, SharedService){
 	var self = this; //service内で関数を使うとき
 	var _data = null;
 	this.findUser =  function(name){
@@ -41,36 +41,37 @@ ctrl.service("userModel", ["$http", "$q", "$state", "$cookies", "$resource", "Sh
 		return $resource('api/users/:name', {name: '@name'});
 	};
 	// ログインしているかをsessionから確認
+	// this.isLogined = function(){
+	// 	return $http.get('api/session');
+	// };
 	this.isLogined = function(){
-		return $http.get('api/session');
+		return $localStorage.user;
 	};
 	this.login = function(data){
-		console.log(data);
 		if(data.name != "" && data.password != ""){
 			$q.when(self.findUser(data.name))
 			.then(function(user){
-				console.log(user);
 				if(data.password == user.password) {
 					self.setUser(user);
+					$localStorage.user = user.name;
 					console.log(user);
-					// $cookies.putObject('user', user);
 					$state.go("base.userPage");
 				}
 			});
 		}
 	};
 	this.logout = function(){
-		// $cookies.remove('user');
 		// var a = $resource("api/logout").get();
 		$http.get("api/logout")
 		.then(function(res){
 			SharedService.user.set({});
-			console.log('logout'+ a);
+			delete $localStorage.user;
+			console.log('logout');
 			_data = null;
 		});
 	};
 }]);
-ctrl.controller("AllCtrl", function($scope, $http, $q, $state, $cookies, userModel, SharedService){
+ctrl.controller("AllCtrl", function($scope, $http, $q, $state, userModel, SharedService){
 	$scope.user = SharedService.user.get();
 	$scope.$on('changedUser', function() {
 		console.log("[enter] changedUser");
@@ -78,16 +79,6 @@ ctrl.controller("AllCtrl", function($scope, $http, $q, $state, $cookies, userMod
 		console.log($scope.user);
 		console.log("[leave] changedUser");
 	});
-	// $scope.isLogined = function(){
-	// 	return userModel.isLogined();
-	// };
-	// if($scope.isLogined()){
-	// 	$q.when(userModel.findUser($cookies.getObject('user').name))
-	// 	.then(function(data){
-	// 		$scope.user = data;
-	// 	});
-	// 	console.log($scope.user);
-	// }
 	// ログアウト
 	$scope.logout = function(){
 		userModel.logout();
@@ -99,6 +90,9 @@ ctrl.controller("LoginCtrl", function($scope, $http, $q, $state, userModel, Shar
 	$scope.user = "";
 
 	$scope.checkLogin = function(){
+		// userModel.isLogined().success(function(res){
+		// 	if(!!res) $state.go('base.userPage');
+		// });
 		if(userModel.isLogined()){
 			$state.go('base.userPage');
 		}
@@ -123,9 +117,9 @@ ctrl.controller("LoginCtrl", function($scope, $http, $q, $state, userModel, Shar
 						//     name: $scope.data.name,
 						//     password: $scope.data.password
 						// });
-					$scope.data = '';
-					console.log('registered');
-				});
+						$scope.data = '';
+						console.log('registered');
+					});
 				}
 			});
 		}
@@ -170,7 +164,7 @@ ctrl.controller("UserListCtrl", function($scope, $http, $q, $state, userModel, S
  });
 
 // ログイン後
-ctrl.controller("UserPageCtrl", function($scope, $http, $q, $state, $cookies, $modal, userModel, SharedService) {
+ctrl.controller("UserPageCtrl", function($scope, $http, $q, $state, $modal, userModel, SharedService) {
 	// $scope.user = userModel.getUser();
 	$scope.user = SharedService.user.get();
 	$scope.$on('changedUser', function() {
@@ -191,18 +185,13 @@ ctrl.controller("UserPageCtrl", function($scope, $http, $q, $state, $cookies, $m
 					userModel.setUser(data);
 					$scope.user = data;
 				});
-				// $q.when(userModel.reloadUser($cookies.getObject('user').name))
-				// .then(function(data){
-				// 	$scope.user = data;
-				// });
-				// $scope.user = userModel.reloadUser($cookies.getObject('user').name);
 			}
 		},function(){
 			console.log('modal missed');
 		});
 	};
 });
-ctrl.controller("AvatarCtrl", function($scope, $http, $q, $state, $cookies, $modalInstance, userModel, SharedService) {
+ctrl.controller("AvatarCtrl", function($scope, $http, $q, $state, $modalInstance, userModel, SharedService) {
 	$scope.user = SharedService.user.get();
 	$scope.$on('changedUser', function() {
 		console.log("[enter] changedUser");
@@ -246,7 +235,7 @@ ctrl.controller("AvatarCtrl", function($scope, $http, $q, $state, $cookies, $mod
 	// 作成ボタンをおした時
 	$scope.createAvatar = function(){
 		var $cut_image = $('.cut_image');
-		var ratio = 1*($('.ratio_button').position().left + $('.ratio_button').width()/2)/250*2;
+		var ratio = 1*($('.ratio_button').position().left + 10)/250*2;
 		var sX = $cut_image.position().left/ratio*(-1);
 		var sY = $cut_image.position().top/ratio*(-1);
 		var sW = 200/ratio;
@@ -259,6 +248,11 @@ ctrl.controller("AvatarCtrl", function($scope, $http, $q, $state, $cookies, $mod
 		var ctx = canvas.getContext('2d');
 		var img = new Image();
 		img.src = src;
+		sX = sX*img.width/600;
+		sY = sY*img.width/600;
+		sW = sW*img.width/600;
+		sH = sH*img.width/600;
+		// console.log(img.width);
 		/* 画像が読み込まれるのを待ってから処理を続行 */
 		img.onload = function() {
 			ctx.clearRect(0,0,200,200);
@@ -334,35 +328,111 @@ ctrl.controller("AvatarCtrl", function($scope, $http, $q, $state, $cookies, $mod
 });
 
 
-ctrl.controller('AlbumPageCtrl', function($scope, $http, $q, $state, $cookies, userModel, SharedService){
-	$scope.$watch('addPhoto', function(img){
-		$scope.addNewFile(img);
-	});
-	$scope.avatarSrc = [];
-	$scope.addNewFile = function(file){
-		console.log(file);
-		//////
+ctrl.controller('AlbumPageCtrl', function($scope, $http, $q, $state, userModel, SharedService, Upload){
+	// $scope.$watch('addPhoto', function(img){
+	// 	$scope.addNewFile(img);
+	// });
+	// $scope.avatarSrc = [];
+	// $scope.addNewFile = function(file){
+	// 	console.log(file);
+	// 	//////
 
-		// 複数ファイル読み込み完了
-		// scopeに格納を行うコード未完
+	// 	// 複数ファイル読み込み完了
+	// 	// scopeに格納を行うコード未完
 
 
-		////
-		// if(!file || !file.type.match('image.*')){
-		// 	return;
-		// }
-		var reader = new FileReader();
-		reader.onload = function(){
-			$scope.$apply(function(){
-				console.log(reader.result);
-				$scope.avatarSrc = reader.result;
-				// $scope.upfile = file;
-			});
-			$scope.moveItem();
-		}
-		//read as url(reader.result = url)
-		reader.readAsDataURL(file);
-	};
+	// 	////
+	// 	// if(!file || !file.type.match('image.*')){
+	// 	// 	return;
+	// 	// }
+	// 	var reader = new FileReader();
+	// 	reader.onload = function(){
+	// 		$scope.$apply(function(){
+	// 			console.log(reader.result);
+	// 			$scope.avatarSrc = reader.result;
+	// 			// $scope.upfile = file;
+	// 		});
+	// 		$scope.moveItem();
+	// 	}
+	// 	//read as url(reader.result = url)
+	// 	reader.readAsDataURL(file);
+	// };
+
+// --------------------------------------------------------------
+		// ngFileUpload
+// ----------------------------------------------------------------
+	 // for multiple files:
+	$scope.saveFiles = function(files){
+		$scope.uploadFiles(files);
+	}
+    $scope.uploadFiles = function (files) {
+      if (files && files.length) {
+        for (var i = 0; i < files.length; i++) {
+          Upload.upload({url:'', data: {file: files[i]}})
+          .then(function(result){
+          	console.log("success");
+          },function(result){
+          	console.log("failed");
+          });
+        }
+      }
+      else{
+      	console.log("no file");
+      }
+    };
+
+    //----------------CREATE ALBUM----------------//
+    $scope.create = function(name){
+    	console.log($scope.user);
+    	$http({
+    		method: 'POST',
+    		url: '/api/album/create',
+    		data: {
+    			userId: $scope.user._id,
+    			album: name
+    		}
+    	})
+    	.then(function(result){
+    		$scope.albums.push(result.data);
+    	}, function(err){
+    		console.log(err);
+    	});
+    };
+
+    //----------------DELETE ALBUM----------------//
+    $scope.delete = function(id, index){
+    	$http({
+    		method: 'POST',
+    		url: '/api/album/delete',
+    		data: {
+    			_id: id,
+    		}
+    	})
+    	.then(function(result){
+    		$scope.albums.splice(index, 1);
+    	}, function(err){
+    		console.log(err);
+    	});
+    };
+
+    //-----------FIND ALBUM-------------//
+    $scope.findAlbums = function(){
+    	$http({
+    		method: 'POST',
+    		url: '/api/album/findAlbums',
+    		data: {
+    			userId: $scope.user._id
+    		}
+    	})
+    	.success(function(result){
+    		$scope.albums = result;
+    		console.log(result);
+    	})
+    	.error(function(result){
+    		console.log(result);
+    	});
+    };
+    $scope.findAlbums();
 })
 //directive
 .directive('multifileModel',function($parse){
@@ -380,7 +450,108 @@ ctrl.controller('AlbumPageCtrl', function($scope, $http, $q, $state, $cookies, u
         }
     };
 });
-ctrl.controller('MyPageCtrl', function($scope, $http, $q, $state, $cookies, userModel, SharedService){
+ctrl.controller('OneAlbumPageCtrl', function($scope, $http, $q, $state, $modal, $localStorage, userModel, SharedService, Upload){
+	// console.log($state);
+	$scope.name = $state.params.name;
+	$scope.items = []; // 写真
+	if($state.params.albumId != null){
+		$localStorage.albumId = $state.params.albumId;
+		$scope.albumId = $state.params.albumId;
+	}
+	else{
+		$scope.albumId = $localStorage.albumId;
+	}
+
+	$scope.open = function(){
+		$http.post('/api/album/open',{_id: $scope.albumId})
+		.success(function(result){
+			console.log(result);
+			var photoIds = result.photos;
+			// 1枚ずつ画像を読み込むUX向上
+			photoIds.forEach(function(_id,index){
+				$http.post('/api/album/openImage', {_id: _id })
+				.success(function(result){
+					console.log(index);
+					$scope.items[index] = result;
+					console.log($scope.items);
+				})
+				.error(function(result){
+					console.log(result);
+				});
+			});
+		})
+		.error(function(result){
+			console.log(result);
+		});
+	};
+	$scope.open();
+
+	$scope.addPhotos = function(files){
+		if (files && files.length) {
+			for (var i = 0; i < files.length; i++) {
+				var file = files[i];
+				// console.log(files[i]);
+				Upload.dataUrl(file,true).then(function(url){
+					$http({
+						method: 'POST',
+						url: '/api/album/add',
+						data: {
+							albumId: $scope.albumId,
+							name: file.name,
+							src: url
+						}
+					})
+					.then(function(result){
+						console.log("success");
+						// console.log(result);
+						$scope.items.push(result.data);
+					},function(result){
+						console.log("failed");
+					});
+				});
+			}
+		}
+		else{
+			console.log("no file");
+		}
+	};
+	$scope.deletePhoto = function(item){
+		$modal.open({
+			templateUrl: 'partials/modal/confirmModal',
+			controller: function($scope, $modalInstance){
+				$scope.ok = function(){
+					$modalInstance.close('close');
+				};
+				$scope.cancel = function(){
+					$modalInstance.dismiss('cancel');
+				};
+			}
+		})
+		.result.then(function(res){
+			$http.post('/api/album/deletePhoto', {_id: item._id, albumId: $scope.albumId})
+			.success(function(result){
+				console.log(result);
+				var delete_pt = $scope.items.indexOf(item);
+				console.log(delete_pt);
+				$scope.items.splice(delete_pt,1);
+			});
+		},function(){
+			console.log('cancel');
+		});
+	};
+	// $scope.deletePhoto = function(item){
+	// 	$http.post('/api/album/deletePhoto', {_id: item._id, albumId: $scope.albumId})
+	// 	.success(function(result){
+	// 		console.log(result);
+	// 		var delete_pt = $scope.items.indexOf(item);
+	// 		console.log(delete_pt);
+	// 		$scope.items.splice(delete_pt,1);
+	// 	});
+	// }
+});
+
+
+ctrl.controller('MyPageCtrl', function($scope, $http, $q, $state, userModel, SharedService){
 	// upload later on form submit or something similar
     $scope.submit = function() {
 

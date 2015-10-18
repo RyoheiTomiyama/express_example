@@ -25,6 +25,11 @@
     "jquery-ui": "~1.11.4",
     "ng-flow": "~2.6.1",
     "flow.js": "~2.9.0",
-    "fusty-flow.js": "~1.1.0"
+    "fusty-flow.js": "~1.1.0",
+    "ng-file-upload": "~9.0.8",
+    "ng-file-upload-shim": "~9.0.8",
+    "angularLocalStorage": "~0.3.2",
+    "ngstorage": "~0.3.9",
+    "bootstrap": "~3.3.5"
   }
 }

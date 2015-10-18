@@ -16,6 +16,7 @@ var db = require('./model/database');
 var routes = require('./routes/index');     // 各ページ
 // var users = require('./routes/users');
 var api = require('./routes/api');    // mongoデータ
+// var album = require('./routes/album');    // mongoデータ
 
 
 // Viewの設定
@@ -54,7 +55,13 @@ app.get("/api/session", api.isLogined);
 app.get("/api/logout", api.isLogined);
 app.post("/api/changeProfile", api.changeProfile);
 app.get("/api/users/delete/:_id", api.deleteUser);
-
+app.post("/api/album/create", api.album.create); // 新規アルバム
+app.post("/api/album/delete", api.album.delete); // アルバム削除
+app.post("/api/album/findAlbums", api.album.findAlbums); //　アルバム一覧
+app.post("/api/album/open", api.album.open); // アルバム情報取得
+app.post("/api/album/openImage", api.album.openImage); // アルバム画像取得(一枚ずつ)
+app.post("/api/album/add", api.album.add); // 写真追加
+app.post("/api/album/deletePhoto", api.album.deletePhoto); // 写真削除
 
 
 // catch 404 and forward to error handler

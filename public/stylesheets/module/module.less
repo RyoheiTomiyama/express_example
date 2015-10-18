@@ -1,0 +1,303 @@
+.clearfix:after {
+	display: block;
+	clear: both;
+	content: "";
+}
+.fleft{
+	float: left;
+}
+.fright{
+	float: right;
+}
+// ------------------------
+//       header footer
+// ------------------------
+.header{
+	width: 100%;
+	height: 80px;
+}
+.border_bottom{
+	border-bottom: 1px solid @lightgray;
+}
+.logo{
+	display: inline-block;
+	width: 200px;
+	height: 80px;
+	line-height: 80px;
+	text-align: center;
+	vertical-align: middle;
+	background-color: #f1f3f5;
+	img{
+		vertical-align: middle;
+	}
+}
+.navbar{
+	display: inline-block;
+	height: 80px;
+	vertical-align: top;
+}
+.navbar_inner{
+	display: inline-block;
+	text-align: center;
+	width: 120px;
+	padding: 15px 0 5px;
+	height: 100%;
+	color: @darkgray;
+	&:hover{
+		background-color: @gray;
+		color: #fff;
+	}
+}
+.navbar_item{
+	line-height: 60px;
+}
+.navbar_item_normal{
+}
+.logout{
+	float: right;
+	text-align: center;
+	width: 120px;
+	height: 80px;
+	line-height: 80px;
+	background-color: @green;
+	color: #fff;
+}
+.profile{
+	float: right;
+	width: 60px;
+	height: 60px;
+	margin: 10px;
+	border: 1px solid @lightgray;
+	font-size: 0;
+	border-radius: 50%;
+	overflow: hidden;
+	img{
+		width: inherit;
+		height: auto;
+	}
+}
+.footer{
+	background-color: @black;
+	padding: 20px 0;
+	text-align: center;
+	color: #fff;
+}
+
+
+// ------------------------
+//       base
+// ------------------------
+.wrapper_width{
+	width: 100%;
+	padding-left: 2%;
+	padding-right: 2%;
+}
+.wrapper_height{
+	padding-top: 3%;
+	padding-bottom: 3%;
+}
+.title{
+	margin-top: 30px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	margin-bottom: 30px;
+	border-top: 1px solid @darkgray;
+	border-bottom: 1px solid @darkgray;
+	font-size: 21px;
+}
+
+// ------------------------
+//       login
+// ------------------------
+.login_wrap{
+	display: inline-block;
+	margin: 0 auto;
+	border: 1px solid #f1f3f5;
+	border-radius: 6px;
+	padding: 40px 80px;
+	text-align: center;
+}
+.login_item{
+	margin: 10px 0;
+	text-align: left;
+}
+
+
+// ------------------------
+//       Users
+// ------------------------
+.left_nav{
+	display: inline-block;
+	vertical-align: top;
+	width: 200px;
+	background-color: @black;
+	color: #fff;
+}
+.left_nav_return{
+	background-color: @gray;
+	padding: 20px;
+}
+.left_nav_inner{
+	padding: 0 10px;
+	// margin: 20px 0;
+}
+.left_nav_item{
+	padding: 20px 10px;
+	.border_bottom;
+}
+.contents{
+	display: inline-block;
+	vertical-align: top;
+	margin-right: -200px;
+	padding: 20px;
+	padding-right: 200px;
+	width: 100%;
+	// background-color: @lightgray;
+}
+
+.button{
+	-webkit-appearance: none;
+	border: none;
+	padding: 10px 20px;
+	margin: 10px;
+	border-radius: 6px;
+	cursor: pointer;
+}
+.button_gray{
+	color: #fff;
+	background-color: @gray;
+}
+.button_lightgray{
+	color: #fff;
+	background-color: @lightgray;
+}
+.button_green{
+	color: #fff;
+	background-color: @green;
+}
+.button_red{
+	color: #fff;
+	background-color: @red;
+}
+.drag_area{
+	width: 90%;
+	margin: 0 auto;
+	border: 2px dotted @gray;
+	border-radius: 6px;
+	text-align: center;
+	padding: 3%;
+	line-height: 1.8;
+}
+#avatar{
+	display: none;
+}
+.cut_area{
+	width: 90%;
+	height: 400px;
+	margin: 10px auto;
+	background-color: @lightgray;
+	position: relative;
+	overflow: hidden;
+}
+.cut_wrap{
+	position: absolute;
+	width: 200px;
+	height: 200px;
+	background-color: #fff;
+	top: 50%;
+	left: 50%;
+	margin-top: -100px;
+	margin-left: -100px;
+}
+.drag_image{
+	opacity: 0.3;
+	cursor: move;
+}
+.cut_item{
+	width: 200px;
+	height: 200px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -100px;
+	margin-left: -100px;
+	overflow: hidden;
+}
+.drag_image,.cut_image{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 600px;
+}
+.ratio_slider{
+	position: relative;
+	width: 250px;
+	height: 8px;
+	margin: 10px auto;
+	background-color: @lightgray;
+	border-radius: 2px;
+}
+.ratio_button{
+	position: absolute;
+	top: -3px;
+	left: 118px;
+	width: 14px;
+	height: 14px;
+	background-color: @green;
+	border-radius: 7px;
+}
+#create_image{
+	display: none;
+}
+
+
+
+/*-------------------------------------
+	ALBUM
+-------------------------------------*/
+.album_item{
+	position: relative;
+	display: inline-block;
+	vertical-align: top;
+	width: 200px;
+	height: 220px;
+	border: 1px solid @lightgray;
+	padding: 10px;
+	margin: 10px;
+	span{
+		display: block;
+		width: 100%;
+		overflow: hidden;
+		font-size: 10px;
+		line-height: 1.5;
+		white-space: nowrap;
+	}
+	.delete_button{
+		position: absolute;
+		top: -3px;
+		right: -3px;
+		width: 20px;
+		height: 20px;
+		border-radius: 10px;
+		color: #fff;
+		text-align: center;
+		padding-top: 5px;
+		font-size: 10px;
+		transition: background-color .2s;
+	}
+}
+.album_image{
+	display: inline-block;
+	width: 180px;
+	height: 182px;
+	border-radius: 3px;
+	border: 1px solid @lightgray;
+	padding: 5px;
+	img{
+		display: block;
+		max-width: 170px;
+		max-height: 170px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+}

@@ -1,16 +1,37 @@
 //- button.button.button_green(ng-click='addPhoto()') ＋写真を追加
 
-div(flow-init flow-name="album")
-	div.drag_area(flow-drop flow-drag-enter="style={border:'4px solid green'}" flow-drag-leave="style={}" ng-style="style")
-		p アップロードするファイルをドロップ
-		p または
-		div.btn_group
-			button.button.button_green(for='avatar' flow-btn) ＋写真を追加
+//- div(flow-init="{target:'/album'}" flow-name="album")
+//- 	div.drag_area(flow-drop flow-drag-enter="style={border:'4px solid green'}" flow-drag-leave="style={}" ng-style="style")
+//- 		p アップロードするファイルをドロップ
+//- 		p または
+//- 		div.btn_group
+//- 			button.button.button_green(for='avatar' flow-btn) ＋写真を追加
 
-	div.album_item(ng-repeat="file in album.files")
-		span {{file.name}}
-		div.album_image
-			img(flow-img="file")
+//- 	div.album_item(ng-repeat="file in album.files")
+//- 		span {{file.name}}
+//- 		div.album_image
+//- 			img(flow-img="file")
 
 
-	div(ng-click="upload()")
+//- 	div(ng-click="upload()")
+
+
+//- div.btn_group
+//- 	button.button.button_green(ngf-select ng-model="tests" ngf-multiple="true") ＋写真を追加
+//- div.album_item(ng-repeat="test in tests")
+//- 	span {{test.name}}
+//- 	div.album_image
+//- 		img(ngf-src="test")
+//- div.btn_group
+//- 	button.button.button_green(ng-click="saveFiles(tests)") 保存
+
+label name：
+input(type="text" ng-model="name")
+button.button.button_green(ng-click="create(name)") 新規作成
+
+
+div.title Albums
+div(ng-if="albums" ng-repeat="album in albums")
+	div.name {{album.album}}
+		button.button.button_green(ui-sref="base.oneAlbumPage({albumId: album._id, name: album.album})") move
+		button.button.button_red(ng-click="delete(album._id,$index)") delete

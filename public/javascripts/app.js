@@ -38,6 +38,16 @@ app.config(function($stateProvider, $locationProvider, $urlRouterProvider) {
         templateUrl: "partials/albumpage",
         controller: "AlbumPageCtrl"
     })
+    .state('base.oneAlbumPage',{
+        auth: true,
+        url: "/album/:name",
+        templateUrl: "partials/oneAlbumPage",
+        controller: "OneAlbumPageCtrl",
+        params: {
+            albumId: null
+        },
+        reloadOnSearch: true
+    })
     ;
 });
 // app.factory('User', function($resource) {
@@ -52,20 +62,32 @@ app.run(['$rootScope', '$state', '$q', 'userModel', 'SharedService', function($r
             return;
         }
         console.log('checklogin...');
-        userModel.isLogined().success(function(res){
-            console.log(res);
-            if(!!res) {
-                console.log('login');
-                $q.when(userModel.findUser(res))
-                .then(function(item){
-                    SharedService.user.set(item);
-                });
-            }
-            else {  // ログインしていなければ
-                console.log('not login');
-                e.preventDefault();
-                $state.go('login');
-            }
-        });
+        // userModel.isLogined().success(function(res){
+        //     console.log(res);
+        //     if(!!res) {
+        //         console.log('login');
+        //         $q.when(userModel.findUser(res))
+        //         .then(function(item){
+        //             SharedService.user.set(item);
+        //         });
+        //     }
+        //     else {  // ログインしていなければ
+        //         console.log('not login');
+        //         e.preventDefault();
+        //         $state.go('login');
+        //     }
+        // });
+        var name = userModel.isLogined();
+        if(!!name){
+            console.log('login');
+            $q.when(userModel.findUser(name))
+            .then(function(item){
+                SharedService.user.set(item);
+            });
+        } else{
+            console.log('not login');
+            e.preventDefault();
+            $state.go('login');
+        }
     });
 }]);

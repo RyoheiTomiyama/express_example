@@ -26,6 +26,10 @@ script.
 	$(function(){
 		//- var orgW = imgW;
 		var ratio = 1;
+
+		var cutW = 200;
+		var cutH = 200;
+
 		$('.drag_image').draggable({
 			drag: function(event, ui){
 				var posX = ui.position.left;
@@ -39,15 +43,30 @@ script.
 
 		$('.ratio_button').draggable({
 			axis: "x",
+			//- containment: [10,0,200,0],
+			containment: "parent",
 			drag: function(event, ui){
-				orgW = $('.cut_image').width()/ratio;
-				orgH = $('.cut_image').height()/ratio;
-				ratio = 1*ui.position.left/250*2;
+				var $cut = $('.cut_image');
+				var orgW = $cut.width()/ratio;
+				var orgH = $cut.height()/ratio;
+				var orgX = $cut.position().left;
+				var orgY = $cut.position().top;
+				ratio = 1*(ui.position.left+10)/250*2;
 				var valW = orgW*ratio;
 				var valH = orgH*ratio;
+
+				var dX = (orgX-cutW/2)/$cut.width();
+				var dY = (orgY-cutH/2)/$cut.height();
+
+				console.log(valW);
+				console.log(valH);
+				console.log(dX);
+				console.log(dY);
 				$('.drag_image, .cut_image').css({
 					'width': valW,
-					'height': valH
+					'height': valH,
+					'left': valW*dX + cutW/2,
+					'top': valH*dY + cutH/2
 				});
 			}
 		});

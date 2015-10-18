@@ -1,3 +1,5 @@
+var album = require('./album');
+exports.album = album;
 var mongoose = require('mongoose');
 
 var Users = mongoose.model('User');
@@ -31,7 +33,7 @@ exports.user = function(req, res) {
 			Users.populate(item, { path:'profile' }, function(err, item){
 				if(err) return res.json(err);
 				else {
-					req.session.user = req.params.name;
+					// req.session.user = req.params.name;
 					return res.json(item);
 				}
 			});
@@ -63,8 +65,7 @@ exports.changeProfile = function(req,res){
 		if(!err){
 			Profile.where({userId: req.body.userId}).findOne(function(err,item){
 				if(err) res.json(err);
-				if(!item){
-				//初めてプロフィールを作る場合
+				if(!item){ //初めてプロフィールを作る場合
 					var profile = new Profile({
 						userId: req.body.userId,
 						photo: req.body.photo

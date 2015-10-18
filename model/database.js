@@ -21,6 +21,22 @@ var profileSchema = new mongoose.Schema({
 });
 mongoose.model('Profile', profileSchema);
 
+var albumSchema = new mongoose.Schema({
+	userId: String,
+	album: String,
+	photos: [{type: String, ref: 'Albumfile'}],
+	createdAt: {type: Date, default: Date.now}
+});
+mongoose.model('Album', albumSchema);
+
+var albumfileSchema = new mongoose.Schema({
+	albumId: String,
+	name: String,
+	src: String
+});
+mongoose.model('Albumfile', albumfileSchema);
+
+
 
 // サンプル生成
 // var User = mongoose.model('User');

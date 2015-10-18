@@ -1,0 +1,10 @@
+.is_hover(@back,@color){
+	&:hover{
+		background-color: @back;
+		color: @color;
+		cursor: pointer;
+	}
+}
+.is_hover_red{
+	.is_hover(@red,#fff);
+}
