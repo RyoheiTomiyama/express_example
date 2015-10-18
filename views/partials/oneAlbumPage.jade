@@ -1,5 +1,12 @@
 div.title {{name}}
 
+//- tags-input(ng-model="tags")
+
+div.tag_input
+	input.checkKeyUp(ng-model="org" ng-click="" ng-keyup="createTag($event,org)")
+div.tag_item(ng-repeat="tag in tags track by $index")
+	div.checkKeyUp(cm-editable-text ng-model="tag") {{tag}}
+	div.delete_tag(ng-click="delete_tag($index)") ✕
 
 div.drag_area(ngf-drop="addPhotos($files)" ng-model="tests" ngf-multiple="true" ngf-resize="{width:1920,height:1920,quality:.9}")
 	p アップロードするファイルをドロップ

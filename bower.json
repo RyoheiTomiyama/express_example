@@ -30,6 +30,7 @@
     "ng-file-upload-shim": "~9.0.8",
     "angularLocalStorage": "~0.3.2",
     "ngstorage": "~0.3.9",
-    "bootstrap": "~3.3.5"
+    "bootstrap": "~3.3.5",
+    "ng-tags-input": "~3.0.0"
   }
 }

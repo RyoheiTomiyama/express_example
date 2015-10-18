@@ -1,5 +1,5 @@
 'use strict';
-var ctrl = angular.module('ctrl', ["ui.router","ngResource", "flow", "ngFileUpload", "ngStorage"]);
+var ctrl = angular.module('ctrl', ["ui.router","ngResource", "flow", "ngFileUpload", "ngStorage", "ngTagsInput"]);
 ctrl.config(['flowFactoryProvider', function (flowFactoryProvider) {
     flowFactoryProvider.factory = fustyFlowFactory;
 }]);
@@ -539,17 +539,67 @@ ctrl.controller('OneAlbumPageCtrl', function($scope, $http, $q, $state, $modal, 
 			console.log('cancel');
 		});
 	};
-	// $scope.deletePhoto = function(item){
-	// 	$http.post('/api/album/deletePhoto', {_id: item._id, albumId: $scope.albumId})
-	// 	.success(function(result){
-	// 		console.log(result);
-	// 		var delete_pt = $scope.items.indexOf(item);
-	// 		console.log(delete_pt);
-	// 		$scope.items.splice(delete_pt,1);
-	// 	});
-	// }
-});
 
+
+	/*--------------------- TAG ------------------------*/
+	$scope.tags = [];
+	var compositionJustEnd = false;
+	$(document).on('compositionend','.checkKeyUp', function(){
+		compositionJustEnd = true;
+	});
+	$scope.createTag = function(e, tag){
+	// 変換候補を決定するためのEnterだったら無視
+		if(e.keyCode === 13 && !compositionJustEnd){
+			$scope.tags.push(tag);
+			$scope.org = "";
+		} else {
+			compositionJustEnd = false;
+		}
+	}
+	$scope.delete_tag = function(index){
+		$scope.tags.splice(index,1);
+	};
+});
+// タグを編集するためのディレクティブ
+ctrl.directive('cmEditableText', function () {
+    return {
+        restrict : 'A',
+        require  : '^ngModel',
+        link     : function(scope, element, attrs, ngModel) {
+            ngModel.$render = function() {
+                element.html(ngModel.$viewValue);
+            };
+            element.on('dblclick', function() {
+                var clickTarget = angular.element(this);
+                var EDITING_PROP = 'editing';
+                if ( !clickTarget.hasClass(EDITING_PROP) ) {
+                    clickTarget.addClass(EDITING_PROP);
+                    clickTarget.html('<input type="text" class="checkKeyUp" value="' + ngModel.$viewValue + '" />');
+                    var inputElement = clickTarget.children();
+                    inputElement.on('focus', function() {
+                        inputElement.on('blur', function() {
+                            var inputValue = inputElement.val() || this.defaultValue;
+                            clickTarget.removeClass(EDITING_PROP).text(inputValue);
+                            inputElement.off();
+                            scope.$apply(function() {
+                                ngModel.$setViewValue(inputValue);
+                            });
+                        });
+                    });
+                    inputElement[0].focus();
+                }
+            });
+            var destroyWatcher = scope.$on('$destroy', function () {
+                if ( angular.equals(destroyWatcher, null) ) {
+                    return;
+                }
+                element.off();
+                destroyWatcher();
+                destroyWatcher = null;
+            });
+        }
+    };
+});
 
 ctrl.controller('MyPageCtrl', function($scope, $http, $q, $state, userModel, SharedService){
 	// upload later on form submit or something similar
