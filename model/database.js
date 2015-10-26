@@ -32,7 +32,8 @@ mongoose.model('Album', albumSchema);
 var albumfileSchema = new mongoose.Schema({
 	albumId: String,
 	name: String,
-	src: String
+	src: String,
+	comment: String
 });
 mongoose.model('Albumfile', albumfileSchema);
 

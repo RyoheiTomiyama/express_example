@@ -56,7 +56,14 @@ exports.add = function(req,res){
 			});
 		});
 	});
-
+};
+exports.update = function(req,res){
+	Albumfile.update({_id: req.body._id}, req.body.item, {upsert: true}, function(err) {
+		if(err) throw err;
+		else{
+			return res.send('update');
+		}
+	});
 };
 exports.deletePhoto = function(req,res){
 	Albumfile.remove({_id: req.body._id}, function(err){

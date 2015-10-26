@@ -468,6 +468,7 @@ ctrl.controller('OneAlbumPageCtrl', function($scope, $http, $q, $state, $modal, 
 			console.log(result);
 			var photoIds = result.photos;
 			// 1枚ずつ画像を読み込むUX向上
+			$scope.items = new Array(photoIds.length);
 			photoIds.forEach(function(_id,index){
 				$http.post('/api/album/openImage', {_id: _id })
 				.success(function(result){
@@ -486,12 +487,53 @@ ctrl.controller('OneAlbumPageCtrl', function($scope, $http, $q, $state, $modal, 
 	};
 	$scope.open();
 
+	$scope.change = function(){
+		console.log("change");
+	};
+	$scope.$watch('tests',function(){
+		console.log('dsfh');
+	});
+
+	var reader;
+	var handleFileSelect = function(ev){
+		console.log("handler");
+		reader = new FileReader();
+		reader.onerror = function(e){
+			console.log(e);
+		};
+		reader.onprogress = function(e){
+			console.log("progress");
+		};
+		reader.onabort = function(e) {
+			alert('File read cancelled');
+		};
+		reader.onloadstart = function(e) {
+			console.log("loadstart");
+			console.log(ev.target.files.length);
+			for(var i=0; i<ev.target.files.length; i++){
+				$scope.items.push({});
+			}
+		};
+		reader.onloadend = function(e){
+			console.log("loadend");
+		}
+		// Read in the image file as a binary string.
+		reader.readAsBinaryString(ev.target.files[0]);
+	};
+	document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
 	$scope.addPhotos = function(files){
+		console.log('dsfh');
 		if (files && files.length) {
-			for (var i = 0; i < files.length; i++) {
-				var file = files[i];
-				// console.log(files[i]);
-				Upload.dataUrl(file,true).then(function(url){
+			var itemCount = $scope.items.length-files.length;
+			for(var i=0; i<files.length; i++){
+				$scope.items[itemCount+i] = {
+					name: "",
+					comment: ""
+				};
+			}
+			files.forEach(function(file,index){
+					Upload.dataUrl(file,true).then(function(url){
 					$http({
 						method: 'POST',
 						url: '/api/album/add',
@@ -504,17 +546,29 @@ ctrl.controller('OneAlbumPageCtrl', function($scope, $http, $q, $state, $modal, 
 					.then(function(result){
 						console.log("success");
 						// console.log(result);
-						$scope.items.push(result.data);
+						$scope.items[itemCount+index] = result.data;
 					},function(result){
 						console.log("failed");
 					});
 				});
-			}
+			});
 		}
 		else{
 			console.log("no file");
 		}
 	};
+	$scope.updateComment = function(item){
+		$http({
+			method: 'POST',
+			url: '/api/album/update',
+			data:{
+				_id: item._id,
+				item: item.comment
+			}
+		}).then(function(res){
+			console.log(res);
+		},function(err){console.log(err)});
+	}
 	$scope.deletePhoto = function(item){
 		$modal.open({
 			templateUrl: 'partials/modal/confirmModal',
@@ -550,8 +604,10 @@ ctrl.controller('OneAlbumPageCtrl', function($scope, $http, $q, $state, $modal, 
 	$scope.createTag = function(e, tag){
 	// 変換候補を決定するためのEnterだったら無視
 		if(e.keyCode === 13 && !compositionJustEnd){
-			$scope.tags.push(tag);
-			$scope.org = "";
+			if(!!tag && tag.length != 0){
+				$scope.tags.push(tag);
+				$scope.org = "";
+			}
 		} else {
 			compositionJustEnd = false;
 		}

@@ -12,7 +12,8 @@ div.drag_area(ngf-drop="addPhotos($files)" ng-model="tests" ngf-multiple="true" 
 	p アップロードするファイルをドロップ
 	p または
 	div.btn_group
-		button.button.button_green(ngf-select="addPhotos($files)" ng-model="tests" ngf-multiple="true" ngf-resize="{width:1920,height:1920,quality:.9}") ＋写真を追加
+		label.button.button_green(for="files") ＋写真を追加
+			input#files(type="file" ngf-select="addPhotos($files)" ng-model="tests" ngf-multiple="true" ngf-resize="{width:1920,height:1920,quality:.9}" style="display:none;")
 //- div.btn_group
 	button.button.button_green(ngf-select="addPhotos($files)" ng-model="tests" ngf-multiple="true" ngf-resize="{width:1920,height:1920,quality:.9}") ＋写真を追加
 //- div.album_item(ng-repeat="test in tests")
@@ -24,5 +25,10 @@ div.drag_area(ngf-drop="addPhotos($files)" ng-model="tests" ngf-multiple="true" 
 div.album_item(ng-repeat="item in items track by $index")
 	span {{item.name}}
 	div.album_image
+		div.bar(ng-hide="!!item.src")
 		img(src="{{item.src}}")
+	div.album_comment
+		textarea(ng-model="comment" ng-focus="focusComment=item.comment" ng-blur="updateComment(item)") {{item.comment}}
 	div.delete_button.button_lightgray.is_hover_red(ng-click="deletePhoto(item)") ✕
+
+input(type="file")

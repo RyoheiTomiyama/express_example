@@ -61,6 +61,7 @@ app.post("/api/album/findAlbums", api.album.findAlbums); //　アルバム一覧
 app.post("/api/album/open", api.album.open); // アルバム情報取得
 app.post("/api/album/openImage", api.album.openImage); // アルバム画像取得(一枚ずつ)
 app.post("/api/album/add", api.album.add); // 写真追加
+app.post("/api/album/update", api.album.update); // 写真更新
 app.post("/api/album/deletePhoto", api.album.deletePhoto); // 写真削除
 
 
